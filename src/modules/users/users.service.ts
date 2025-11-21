@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,32 +11,53 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(
-    name: string,
-    email: string,
-    role: UserEntity['role'],
-  ): Promise<UserEntity> {
-    const user = this.userRepository.create({ name, email, role });
-    return this.userRepository.save(user);
+  async create(input: CreateUserDto): Promise<UserEntity> {
+    try {
+      const user = this.userRepository.create({
+        name: input.name,
+        email: input.email,
+      });
+      return this.userRepository.save(user);
+    } catch (error) {
+      throw new Error(`Failed to create user: ${(error as Error).message}`);
+    }
   }
 
-  async findAll(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<UserEntity[] | null> {
+    try {
+      const allUser = await this.userRepository.find();
+      return allUser;
+    } catch (error) {
+      throw new Error(`Failed to find users: ${(error as Error).message}`);
+    }
   }
 
   async findOne(id: string): Promise<UserEntity | null> {
-    return this.userRepository.findOneBy({ id });
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      return user;
+    } catch (error) {
+      throw new Error(`Failed to find user: ${(error as Error).message}`);
+    }
   }
 
   async update(
     id: string,
     updateData: Partial<UserEntity>,
   ): Promise<UserEntity | null> {
-    await this.userRepository.update(id, updateData);
-    return this.findOne(id);
+    try {
+      await this.userRepository.update(id, updateData);
+      return this.findOne(id);
+    } catch (error) {
+      throw new Error(`Failed to update user: ${(error as Error).message}`);
+    }
   }
 
   async remove(id: string): Promise<void> {
-    await this.userRepository.delete(id);
+    try {
+      await this.userRepository.delete(id);
+    } catch (error) {
+      throw new Error(`Failed to remove user: ${(error as Error).message}`);
+    }
   }
 }

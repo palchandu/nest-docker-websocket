@@ -18,9 +18,8 @@ import configuration from './config/configuration';
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.dbName'),
         entities: [__dirname + '/modules/**/*.entity{.ts,.js}'],
-        migrations: [__dirname + '/**/migrations/*{.ts,.js}'],
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
         logging: true,
         poolSize: 10,
         extra: {

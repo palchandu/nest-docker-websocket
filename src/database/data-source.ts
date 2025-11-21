@@ -1,6 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import 'dotenv/config';
-
+const isProd = process.env.NODE_ENV === 'production';
 const dataSourceConfig: DataSourceOptions = {
   type: 'postgres',
   host: (process.env.POSTGRES_HOST as string) || 'postgres',
@@ -8,13 +8,14 @@ const dataSourceConfig: DataSourceOptions = {
   username: (process.env.POSTGRES_USER as string) || 'postgres',
   password: (process.env.POSTGRES_PASSWORD as string) || 'postgres',
   database: (process.env.POSTGRES_DB as string) || 'mydb',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
+  entities: [
+    isProd ? 'dist/modules/**/*.entity.js' : 'src/modules/**/*.entity.ts',
+  ],
+  migrations: [isProd ? 'dist/migrations/*.js' : 'src/migrations/*.ts'],
   synchronize: false,
-  migrationsRun: false,
+  migrationsTableName: 'migrations_history',
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-const dataSource: DataSource = new DataSource(dataSourceConfig);
+const AppDataSource: DataSource = new DataSource(dataSourceConfig);
 
-export default dataSource;
+export { AppDataSource };
