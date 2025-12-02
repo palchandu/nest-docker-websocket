@@ -22,7 +22,8 @@
     "migration:generate": "npm run typeorm -- migration:generate src/migrations/$npm_config_name -d src/database/data-source.ts",
     "migration:run:dev": "npm run typeorm -- migration:run -d src/database/data-source.ts",
     "migration:revert:dev": "npm run typeorm -- migration:revert -d src/database/data-source.ts",
-    "migrate:build-run": "npm run build && node dist/scripts/run-migrations.js"
+    "migrate:build-run": "npm run build && node dist/scripts/run-migrations.js",
+    "dev:swc": "nest start -b swc --watch --type-check"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -45,6 +46,8 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@swc/cli": "^0.7.9",
+    "@swc/core": "^1.15.3",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
@@ -73,7 +76,7 @@
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": ["@swc/jest"]
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

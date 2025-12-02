@@ -13,6 +13,30 @@ services:
       - "8700:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - path: ./src
+          action: sync+restart
+          target: /app/src
+          ignore:
+          - node_modules/
+    container_name: backend
+    restart: always
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    
 volumes:
   postgres_data:

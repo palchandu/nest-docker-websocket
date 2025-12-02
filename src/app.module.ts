@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { BlogsModule } from './modules/blogs/blogs.module';
+import { CommentsModule } from './modules/comments/comments.module';
+import { VideoBlogsModule } from './modules/video-blogs/video-blogs.module';
 import configuration from './config/configuration';
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import configuration from './config/configuration';
     }),
     UsersModule,
     BlogsModule,
+    CommentsModule,
+    VideoBlogsModule,
   ],
   controllers: [],
   providers: [],
